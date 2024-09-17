@@ -23,6 +23,14 @@ public class Product extends EntityBase {
         this.description = productDTO.description();
         this.ownerId = productDTO.ownerId();
         this.price = productDTO.price();
-        this.category = productDTO.category();
+    }
+
+    public void update(ProductDTO productDTO) {
+        if(!productDTO.description().isEmpty())
+            this.description = productDTO.description();
+        if (!productDTO.title().isEmpty())
+            this.title = productDTO.title();
+        if(productDTO.price() != null)
+            this.price = productDTO.price();
     }
 }

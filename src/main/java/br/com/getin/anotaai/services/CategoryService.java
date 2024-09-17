@@ -7,6 +7,7 @@ import br.com.getin.anotaai.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -22,23 +23,23 @@ public class CategoryService {
         return entity;
     }
 
+    public Category update(String id, CategoryDTO dto) {
+        var entity = repository.findById(id).orElseThrow(CategoryNotFoundException::new);
+        entity.update(dto);
+        this.repository.save(entity);
+        return entity;
+    }
+
     public List<Category> getAll() {
         return this.repository.findAll();
     }
 
-    public Category update(String id, CategoryDTO model) {
-        var category = repository.findById(id).orElseThrow(CategoryNotFoundException::new);
-        category.update(model);
-        this.repository.save(category);
-        return category;
-    }
-
-    public Category getById(String id) {
-        return repository.findById(id).orElseThrow(CategoryNotFoundException::new);
+    public Optional<Category> getById(String id) {
+        return repository.findById(id);
     }
 
     public void delete(String id) {
-        var category = repository.findById(id).orElseThrow(CategoryNotFoundException::new);
-        this.repository.delete(category);
+        var entity = repository.findById(id).orElseThrow(CategoryNotFoundException::new);
+        this.repository.delete(entity);
     }
 }

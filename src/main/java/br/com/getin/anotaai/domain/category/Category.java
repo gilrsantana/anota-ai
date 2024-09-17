@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @NoArgsConstructor
 public class Category extends EntityBase {
-    private String description;
     private String title;
+    private String description;
     private String ownerId;
 
     public Category(CategoryDTO categoryDTO) {

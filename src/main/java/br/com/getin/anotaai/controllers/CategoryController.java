@@ -3,7 +3,6 @@ package br.com.getin.anotaai.controllers;
 import br.com.getin.anotaai.domain.category.Category;
 import br.com.getin.anotaai.domain.category.CategoryDTO;
 import br.com.getin.anotaai.services.CategoryService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +21,17 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<Category>> getAll() {
         var entities = this.service.getAll();
-        return ResponseEntity.ok().body(entities);
+        return entities.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok().body(entities);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getById(@PathParam("id") String id) {
+    public ResponseEntity<Category> getById(@PathVariable("id") String id) {
         var entity =  this.service.getById(id);
-        return ResponseEntity.ok().body(entity);
+        return entity.map(category ->
+                ResponseEntity.ok().body(category)).orElseGet(() ->
+                ResponseEntity.noContent().build());
     }
 
     @PostMapping
@@ -38,14 +41,14 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathParam("id") String id, @RequestBody CategoryDTO model) {
+    public ResponseEntity<Category> update(@PathVariable("id") String id, @RequestBody CategoryDTO model) {
         var entity =  this.service.update(id, model);
         return ResponseEntity.ok().body(entity);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> delete(@PathParam("id") String id) {
+    public ResponseEntity<Category> delete(@PathVariable("id") String id) {
         this.service.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
